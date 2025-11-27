@@ -29,28 +29,31 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("Math AI – المساعد الرياضي الذكي 🧮")
-st.markdown("**قسم العمليات الحسابية:** اختر العملية عبر الأزرار، أو أدخل معادلة في الأسفل لحلها.")
+st.markdown("**العمليات الحسابية + حل المعادلات** في مكان واحد. أدخل الأرقام أو المعادلة وجرب الأزرار أدناه.")
 
-# سجل العمليات السابقة
+# -----------------------------
+# إعداد session_state
+# -----------------------------
 if 'history' not in st.session_state:
     st.session_state.history = []
+
+if 'num1' not in st.session_state:
+    st.session_state.num1 = 0
+if 'num2' not in st.session_state:
+    st.session_state.num2 = 0
+if 'equation_input' not in st.session_state:
+    st.session_state.equation_input = ""
 
 # -----------------------------
 # العمليات الحسابية
 # -----------------------------
 st.header("العمليات الحسابية")
 
-# القيم الافتراضية للأرقام
-if 'num1' not in st.session_state:
-    st.session_state.num1 = 0
-if 'num2' not in st.session_state:
-    st.session_state.num2 = 0
-
 col1, col2 = st.columns(2)
 st.session_state.num1 = col1.number_input("الرقم الأول:", value=st.session_state.num1, key="num1_input")
 st.session_state.num2 = col2.number_input("الرقم الثاني:", value=st.session_state.num2, key="num2_input")
 
-# أزرار العمليات
+# أزرار العمليات الحسابية
 col_op1, col_op2, col_op3, col_op4 = st.columns(4)
 op_selected = None
 
@@ -91,7 +94,7 @@ if op_selected:
 # حل المعادلات
 # -----------------------------
 st.header("حل المعادلات البسيطة")
-user_input = st.text_input("اكتب المعادلة (مثال: 2*x + 5 = 15)", key="equation_input")
+user_input = st.text_input("اكتب المعادلة (مثال: 2*x + 5 = 15)", value=st.session_state.equation_input, key="equation_input")
 
 x = symbols('x')
 if user_input:
@@ -105,27 +108,4 @@ if user_input:
         else:
             result = sympify(user_input).evalf()
             st.success(f"✅ الناتج: {result}")
-            st.session_state.history.append(f"{user_input} = {result}")
-    except Exception as e:
-        st.error(f"❌ خطأ في المسألة: {e}")
-
-# -----------------------------
-# سجل العمليات وأزرار التحكم
-# -----------------------------
-if st.session_state.history:
-    st.subheader("📜 سجل العمليات السابقة")
-    for idx, item in enumerate(reversed(st.session_state.history), 1):
-        st.write(f"{idx}. {item}")
-
-# أزرار إعادة التعيين ومسح السجل
-col_reset, col_clear = st.columns(2)
-
-if col_reset.button("🔄 إعادة تعيين الإدخالات"):
-    st.session_state.num1 = 0
-    st.session_state.num2 = 0
-    st.session_state.equation_input = ""
-    st.experimental_rerun()
-
-if col_clear.button("🗑️ مسح سجل النتائج"):
-    st.session_state.history = []
-    st.experimental_rerun()
+            st.session_state.history.append(f"{use_
