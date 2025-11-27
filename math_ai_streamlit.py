@@ -99,6 +99,3 @@ user_input = st.text_input("اكتب المعادلة (مثال: 2*x + 5 = 15)",
 x = symbols('x')
 if user_input:
     try:
-        if '=' in user_input:
-            lhs, rhs = user_input.split('=', maxsplit=1)
-            equation = Eq(
