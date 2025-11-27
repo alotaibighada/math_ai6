@@ -25,20 +25,6 @@ st.markdown("""
     font-size: 1.2em;
     cursor: pointer;
 }
-.op-buttons button {
-    padding: 0.7em 1.2em;
-    margin: 0.2em;
-    border-radius: 8px;
-    font-size: 1.2em;
-    font-weight: bold;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-.btn-add { background-color: #FF6F61; }
-.btn-sub { background-color: #1E90FF; }
-.btn-mul { background-color: #3CB371; }
-.btn-div { background-color: #FFA500; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -54,23 +40,32 @@ if 'history' not in st.session_state:
 # -----------------------------
 st.header("العمليات الحسابية")
 
-col1, col2 = st.columns(2)
-num1 = col1.number_input("الرقم الأول:", value=0)
-num2 = col2.number_input("الرقم الثاني:", value=0)
+# القيم الافتراضية للأرقام
+if 'num1' not in st.session_state:
+    st.session_state.num1 = 0
+if 'num2' not in st.session_state:
+    st.session_state.num2 = 0
 
+col1, col2 = st.columns(2)
+st.session_state.num1 = col1.number_input("الرقم الأول:", value=st.session_state.num1, key="num1_input")
+st.session_state.num2 = col2.number_input("الرقم الثاني:", value=st.session_state.num2, key="num2_input")
+
+# أزرار العمليات
 col_op1, col_op2, col_op3, col_op4 = st.columns(4)
 op_selected = None
 
-if col_op1.button("جمع", key="add", help="جمع الرقمين"):
+if col_op1.button("جمع"):
     op_selected = "جمع"
-if col_op2.button("طرح", key="sub", help="طرح الرقمين"):
+if col_op2.button("طرح"):
     op_selected = "طرح"
-if col_op3.button("ضرب", key="mul", help="ضرب الرقمين"):
+if col_op3.button("ضرب"):
     op_selected = "ضرب"
-if col_op4.button("قسمة", key="div", help="قسمة الرقمين"):
+if col_op4.button("قسمة"):
     op_selected = "قسمة"
 
 if op_selected:
+    num1 = st.session_state.num1
+    num2 = st.session_state.num2
     result = None
     symbol = ""
     if op_selected == "جمع":
@@ -96,7 +91,7 @@ if op_selected:
 # حل المعادلات
 # -----------------------------
 st.header("حل المعادلات البسيطة")
-user_input = st.text_input("اكتب المعادلة (مثال: 2*x + 5 = 15)")
+user_input = st.text_input("اكتب المعادلة (مثال: 2*x + 5 = 15)", key="equation_input")
 
 x = symbols('x')
 if user_input:
@@ -122,9 +117,15 @@ if st.session_state.history:
     for idx, item in enumerate(reversed(st.session_state.history), 1):
         st.write(f"{idx}. {item}")
 
+# أزرار إعادة التعيين ومسح السجل
 col_reset, col_clear = st.columns(2)
+
 if col_reset.button("🔄 إعادة تعيين الإدخالات"):
+    st.session_state.num1 = 0
+    st.session_state.num2 = 0
+    st.session_state.equation_input = ""
     st.experimental_rerun()
+
 if col_clear.button("🗑️ مسح سجل النتائج"):
     st.session_state.history = []
     st.experimental_rerun()
