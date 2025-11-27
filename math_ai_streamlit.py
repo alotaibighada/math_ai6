@@ -108,4 +108,22 @@ if user_input:
         else:
             result = sympify(user_input).evalf()
             st.success(f"✅ الناتج: {result}")
-            st.session_state.history.append(f"{use_
+            st.session_state.history.append(f"{user_input} = {result}")
+    except Exception as e:
+        st.error(f"❌ خطأ في المسألة: {e}")
+
+# -----------------------------
+# سجل العمليات السابقة
+# -----------------------------
+if st.session_state.history:
+    st.subheader("📜 سجل العمليات السابقة")
+    for idx, item in enumerate(reversed(st.session_state.history), 1):
+        st.write(f"{idx}. {item}")
+
+# -----------------------------
+# أزرار التحكم
+# -----------------------------
+col_reset, col_clear = st.columns(2)
+
+# إعادة تعيين الأرقام والمعادلة
+if col_reset.button("🔄 إعادة تعيين الإدخالات_
