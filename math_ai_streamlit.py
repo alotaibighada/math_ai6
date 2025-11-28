@@ -78,56 +78,66 @@ if op_selected:
         st.markdown(f'<div class="error-box">❌ خطأ: {e}</div>', unsafe_allow_html=True)
 
 # -----------------------------
-# حل المعادلات مع خطوات
+# دالة تصحيح الضرب الضمني
+# -----------------------------
+def fix_all_implied_multiplication(expr):
+    try:
+        expr = expr.replace(" ", "")  # إزالة المسافات
+        # رقم قبل متغير أو قوس: 2x -> 2*x, 3(x+2) -> 3*(x+2)
+        expr = re.sub(r'(\d)([a-zA-Z\(])', r'\1*\2', expr)
+        # متغير قبل متغير أو قوس: xy -> x*y, x(y+1) -> x*(y+1)
+        expr = re.sub(r'([a-zA-Z\)])([a-zA-Z\(])', r'\1*\2', expr)
+        # قوس مغلق قبل رقم أو قوس: )( -> )*(
+        expr = re.sub(r'(\))(\d|\()', r'\1*\2', expr)
+        return expr
+    except:
+        return expr
+
+# -----------------------------
+# حل المعادلات مع خطوات وتحقق من الصياغة
 # -----------------------------
 st.header("حل المعادلات خطوة بخطوة")
 user_input = st.text_input("اكتب معادلة (مثال: 2*x+5=15 أو 2x*8)")
 
-def fix_implied_multiplication(expr):
-    expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)  # 2x -> 2*x
-    expr = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', expr)  # xy -> x*y
-    return expr
+x = symbols("x")  # متغير افتراضي
 
 def solve_with_steps(eq_text):
     steps = []
-    fixed_input = fix_implied_multiplication(eq_text)
-    if "=" in fixed_input:
-        left, right = fixed_input.split("=", maxsplit=1)
-        left_expr = sympify(left.strip())
-        right_expr = sympify(right.strip())
-        
-        vars_in_eq = list(left_expr.free_symbols.union(right_expr.free_symbols))
-        if vars_in_eq:
-            eq = Eq(left_expr, right_expr)
-            steps.append(f"المعادلة الأصلية: {eq_text}")
-            # تبسيط الجانب الأيسر والأيمن
-            left_s = simplify(left_expr)
-            right_s = simplify(right_expr)
-            steps.append(f"بعد التبسيط: {left_s} = {right_s}")
-            # الحل
-            sol = solve(eq, vars_in_eq)
-            steps.append(f"الحل: {sol}")
-            return steps
-        else:
-            if left_expr == right_expr:
-                steps.append("المعادلة صحيحة ✅")
+    fixed_input = fix_all_implied_multiplication(eq_text)
+    try:
+        if "=" in fixed_input:
+            left, right = fixed_input.split("=", maxsplit=1)
+            left_expr = sympify(left.strip())
+            right_expr = sympify(right.strip())
+            
+            vars_in_eq = list(left_expr.free_symbols.union(right_expr.free_symbols))
+            if vars_in_eq:
+                eq = Eq(left_expr, right_expr)
+                steps.append(f"المعادلة الأصلية: {eq_text}")
+                steps.append(f"بعد التبسيط: {simplify(left_expr)} = {simplify(right_expr)}")
+                sol = solve(eq, vars_in_eq)
+                steps.append(f"الحل: {sol}")
             else:
-                steps.append("المعادلة خاطئة ❌")
-            return steps
-    else:
-        # تعبير رياضي فقط
-        result = sympify(fixed_input).evalf()
-        steps.append(f"نتيجة التعبير: {result}")
+                if left_expr == right_expr:
+                    steps.append("المعادلة صحيحة ✅")
+                else:
+                    steps.append("المعادلة خاطئة ❌")
+        else:
+            # تعبير رياضي فقط
+            result = sympify(fixed_input).evalf()
+            steps.append(f"نتيجة التعبير: {result}")
         return steps
+    except:
+        return ["❌ صياغة المعادلة خاطئة"]
 
 if user_input:
-    try:
-        steps = solve_with_steps(user_input)
-        for s in steps:
+    steps = solve_with_steps(user_input)
+    for s in steps:
+        if "❌" in s:
+            st.markdown(f'<div class="error-box">{s}</div>', unsafe_allow_html=True)
+        else:
             st.markdown(f'<div class="step-box">{s}</div>', unsafe_allow_html=True)
-        st.session_state.history.append(f"{user_input} = {steps[-1]}")
-    except Exception as e:
-        st.markdown(f'<div class="error-box">❌ خطأ في المعادلة: {e}</div>', unsafe_allow_html=True)
+    st.session_state.history.append(f"{user_input} = {steps[-1]}")
 
 # -----------------------------
 # سجل العمليات السابقة
