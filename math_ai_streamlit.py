@@ -50,8 +50,8 @@ if "history" not in st.session_state:
 # -----------------------------
 st.header("العمليات الحسابية")
 col1, col2 = st.columns(2)
-num1 = col1.number_input("🔢 الرقم الأول:", value=0)
-num2 = col2.number_input("🔢 الرقم الثاني:", value=0)
+num1 = col1.number_input(" **الرقم الأول** ", value=0)
+num2 = col2.number_input("**الرقم الثاني**", value=0)
 
 col_op1, col_op2, col_op3, col_op4 = st.columns(4)
 op_selected = None
@@ -94,8 +94,8 @@ def fix_all_implied_multiplication(expr):
 # -----------------------------
 # حل المعادلات خطوة بخطوة مع شرح
 # -----------------------------
-st.header("حل المعادلات التعليمي")
-user_input = st.text_input("اكتب معادلة (مثال: 2*x+5=15 أو 2x*8)")
+st.header("حل المعادلات ")
+user_input = st.text_input("اكتب معادلة (2*x+5=15 أو 2 x*8)")
 
 x = symbols("x")  # متغير افتراضي
 
@@ -164,4 +164,5 @@ if st.session_state.history:
 col_reset, col_clear = st.columns(2)
 col_reset.button("🔄 إعادة التعيين", on_click=lambda: None)
 col_clear.button("🗑️ مسح السجل", on_click=lambda: st.session_state.history.clear())
+
 
