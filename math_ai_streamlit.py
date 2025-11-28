@@ -25,32 +25,41 @@ st.markdown(
 .stTextInput>div>div>input {
     background: rgba(255,255,255,0.95) !important;
     color: black !important;
-    font-size: 1.3em;
-    padding: 0.5em;
-    border-radius: 10px;
+    font-size: 1.6em;
+    font-weight: bold;
+    padding: 0.6em;
+    border-radius: 12px;
     border: 1px solid #555;
     text-align: center;
 }
 
-/* أزرار واضحة */
+/* أزرار واضحة وكبيرة */
 .stButton>button {
-    height: 3em;
+    height: 3.5em;
     width: 100%;
     border-radius: 12px;
     border: none;
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 1.3em;
     background-color: rgba(0, 123, 255, 0.9) !important;
     color: white !important;
 }
 
-/* النصوص والعناوين */
+/* النصوص والعناوين أكبر وأكثر وضوحًا */
 .stMarkdown, .stHeader, .stSubheader {
-    background: rgba(0,0,0,0.4);
-    padding: 5px 10px;
-    border-radius: 8px;
+    background: rgba(0,0,0,0.5);
+    padding: 8px 12px;
+    border-radius: 10px;
     color: white !important;
-    text-shadow: 1px 1px 2px black;
+    font-size: 1.6em;
+    font-weight: bold;
+    text-shadow: 2px 2px 3px black;
+}
+
+/* نتائج العمليات بشكل واضح */
+.stAlert {
+    font-size: 1.8em !important;
+    font-weight: bold !important;
 }
 </style>
 """,
