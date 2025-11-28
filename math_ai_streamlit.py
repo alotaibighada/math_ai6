@@ -61,4 +61,67 @@ st.markdown("""
 # العنوان
 # -----------------------------
 st.title("🧮 Math AI – المساعد الرياضي الذكي")
-st.markdown("أدخل الأرقام أو المعادل
+st.markdown("أدخل الأرقام أو المعادلة واختر العملية لنقوم بالحساب أو الحل.")
+
+# -----------------------------
+# session_state
+# -----------------------------
+for key, default in [("num1", 0), ("num2", 0), ("equation_input", ""), ("history", [])]:
+    if key not in st.session_state:
+        st.session_state[key] = default
+
+# -----------------------------
+# دوال الأزرار
+# -----------------------------
+def reset_inputs():
+    st.session_state.num1 = 0
+    st.session_state.num2 = 0
+    st.session_state.equation_input = ""
+
+def clear_history():
+    st.session_state.history = []
+
+# -----------------------------
+# العمليات الحسابية
+# -----------------------------
+st.header("العمليات الحسابية")
+col1, col2 = st.columns(2)
+st.session_state.num1 = col1.number_input("الرقم الأول:", value=st.session_state.num1, key="num1_input")
+st.session_state.num2 = col2.number_input("الرقم الثاني:", value=st.session_state.num2, key="num2_input")
+
+col_op1, col_op2, col_op3, col_op4 = st.columns(4)
+op_selected = None
+
+if col_op1.button("جمع"):
+    op_selected = "جمع"
+if col_op2.button("طرح"):
+    op_selected = "طرح"
+if col_op3.button("ضرب"):
+    op_selected = "ضرب"
+if col_op4.button("قسمة"):
+    op_selected = "قسمة"
+
+if op_selected:
+    num1 = st.session_state.num1
+    num2 = st.session_state.num2
+
+    if op_selected == "جمع":
+        result = num1 + num2
+        symbol = "+"
+    elif op_selected == "طرح":
+        result = num1 - num2
+        symbol = "-"
+    elif op_selected == "ضرب":
+        result = num1 * num2
+        symbol = "×"
+    elif op_selected == "قسمة":
+        if num2 == 0:
+            st.error("❌ لا يمكن القسمة على صفر")
+            result = None
+        else:
+            result = num1 / num2
+            symbol = "÷"
+
+    if result is not None:
+        st.success(f"✅ {num1} {symbol} {num2} = {result}")
+        st.session_state.hi_
