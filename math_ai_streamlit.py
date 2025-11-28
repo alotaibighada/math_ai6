@@ -8,32 +8,27 @@ import base64
 st.set_page_config(page_title="Math AI – المساعد الرياضي", layout="centered")
 
 # -----------------------------
-# تحميل صورة الخلفية ديناميكيًا
+# تحويل الصورة إلى Base64
 # -----------------------------
-uploaded_bg = st.file_uploader("اختر صورة خلفية", type=["png", "jpg", "jpeg"])
-
 def get_base64_of_image(image_file):
-    data = image_file.read()
+    with open(image_file, "rb") as f:
+        data = f.read()
     return base64.b64encode(data).decode()
 
-if uploaded_bg:
-    image_base64 = get_base64_of_image(uploaded_bg)
-    st.markdown(f"""
-    <style>
-    .stApp {{
-        background-image: url("data:image/png;base64,{image_base64}");
-        background-size: cover;
-        background-attachment: fixed;
-    }}
-    </style>
-    """, unsafe_allow_html=True)
+# ضع هنا مسار الصورة الخاصة بالخلفية
+image_base64 = get_base64_of_image("/mnt/data/981b2b7c-e131-45d6-b564-13dd47cd7442.png")
 
 # -----------------------------
-# تنسيق الإدخالات والأزرار
+# الخلفية والتصميم
 # -----------------------------
-st.markdown("""
+st.markdown(f"""
 <style>
-.stNumberInput>div>div>input, .stTextInput>div>div>input {
+.stApp {{
+    background-image: url("data:image/png;base64,{image_base64}");
+    background-size: cover;
+    background-attachment: fixed;
+}}
+.stNumberInput>div>div>input, .stTextInput>div>div>input {{
     background: rgba(255,255,255,0.85);
     color: black;
     font-size: 1.3em;
@@ -41,19 +36,19 @@ st.markdown("""
     border-radius: 6px;
     border: 1px solid #aaa;
     text-align: center;
-}
-.stButton>button {
+}}
+.stButton>button {{
     height: 3em;
     width: 100%;
     border-radius: 10px;
     border: none;
     font-weight: bold;
     font-size: 1.1em;
-}
-.stMarkdown, .stHeader, .stSubheader {
+}}
+.stMarkdown, .stHeader, .stSubheader {{
     color: white;
     text-shadow: 1px 1px 2px black;
-}
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -66,9 +61,14 @@ st.markdown("أدخل الأرقام أو المعادلة واختر العمل
 # -----------------------------
 # session_state
 # -----------------------------
-for key, default in [("num1", 0), ("num2", 0), ("equation_input", ""), ("history", [])]:
-    if key not in st.session_state:
-        st.session_state[key] = default
+if "num1" not in st.session_state:
+    st.session_state.num1 = 0
+if "num2" not in st.session_state:
+    st.session_state.num2 = 0
+if "equation_input" not in st.session_state:
+    st.session_state.equation_input = ""
+if "history" not in st.session_state:
+    st.session_state.history = []
 
 # -----------------------------
 # دوال الأزرار
@@ -124,4 +124,10 @@ if op_selected:
 
     if result is not None:
         st.success(f"✅ {num1} {symbol} {num2} = {result}")
-        st.session_state.hi_
+        st.session_state.history.append(f"{num1} {symbol} {num2} = {result}")
+
+# -----------------------------
+# حل المعادلات
+# -----------------------------
+st.header("حل المعادلات")
+user_input_
