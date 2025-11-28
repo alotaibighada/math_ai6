@@ -5,7 +5,7 @@ import re
 # -----------------------------
 # إعداد الصفحة
 # -----------------------------
-st.set_page_config(page_title="Math AI تعليمي", layout="centered")
+st.set_page_config(page_title="Math AI ", layout="centered")
 
 # -----------------------------
 # CSS للخلفية والنصوص
@@ -37,7 +37,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🧮 Math AI – المساعد التعليمي")
+st.title("🧮 Math AI – المساعد الذكي")
+st.markdown("أدخل الأرقام أو المعادلة واختر العملية لنقوم بالحساب أو الحل")
 
 # -----------------------------
 # سجل العمليات
@@ -157,3 +158,4 @@ if st.session_state.history:
 col_reset, col_clear = st.columns(2)
 col_reset.button("🔄 إعادة التعيين", on_click=lambda: None)
 col_clear.button("🗑️ مسح السجل", on_click=lambda: st.session_state.history.clear())
+
