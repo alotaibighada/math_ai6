@@ -94,4 +94,26 @@ if op_selected:
 # حل المعادلات
 # -----------------------------
 st.header("حل المعادلات البسيطة")
-user_input = st.text_input("اكتب المعادلة (مثال: 2*x + 5 = 15)", value=st.session_state.equa_*
+user_input = st.text_input(
+    "اكتب المعادلة (  2*x + 5 = 15 مثال)",
+    value=st.session_state.equation_input,
+    key="equation_input"
+)
+
+x = symbols('x')
+if user_input:
+    try:
+        if '=' in user_input:
+            lhs, rhs = user_input.split('=', maxsplit=1)
+            equation = Eq(sympify(lhs.strip()), sympify(rhs.strip()))
+            solution = solve(equation, x)
+            st.success(f"✅ حل المعادلة: {solution}")
+            st.session_state.history.append(f"{user_input} => {solution}")
+        else:
+            result = sympify(user_input).evalf()
+            st.success(f"✅ الناتج: {result}")
+            st.session_state.history.append(f"{user_input} = {result}")
+    except Exception as e:
+        st.error(f"❌ خطأ في المسألة: {e}")
+
+# -----------------------------
