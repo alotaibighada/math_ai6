@@ -20,7 +20,7 @@ st.markdown("hg")
 .stNumberInput>div>div>input,
 .stTextInput>div>div>input {
     background: rgba(255,255,255,0.95) !important;
-    font-size: 1.5em;
+    font-size: 1.5 em;
     font-weight: bold;
     text-align: center;
 }
@@ -164,6 +164,7 @@ if st.session_state.history:
 col_reset, col_clear = st.columns(2)
 col_reset.button("🔄 إعادة التعيين", on_click=lambda: None)
 col_clear.button("🗑️ مسح السجل", on_click=lambda: st.session_state.history.clear())
+
 
 
 
