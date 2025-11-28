@@ -6,7 +6,9 @@ from sympy import symbols, Eq, solve, sympify
 # -----------------------------
 st.set_page_config(page_title="Math AI – المساعد الرياضي", layout="centered")
 
-# CSS لتجميل الواجهة ووضع صورة كخلفية
+# -----------------------------
+# الخلفية والتصميم
+# -----------------------------
 st.markdown("""
 <style>
 .stApp {
@@ -17,20 +19,19 @@ st.markdown("""
 .stNumberInput>div>div>input, .stTextInput>div>div>input {
     background: rgba(255,255,255,0.85);
     color: black;
-    font-size: 1.4em;
-    padding: 0.6em;
-    border-radius: 8px;
+    font-size: 1.3em;
+    padding: 0.5em;
+    border-radius: 6px;
     border: 1px solid #aaa;
     text-align: center;
 }
 .stButton>button {
-    height: 3.5em;
+    height: 3em;
     width: 100%;
     border-radius: 10px;
     border: none;
     font-weight: bold;
-    font-size: 1.2em;
-    cursor: pointer;
+    font-size: 1.1em;
 }
 .stMarkdown, .stHeader, .stSubheader {
     color: white;
@@ -39,44 +40,47 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("Math AI – المساعد الرياضي الذكي 🧮")
-st.markdown("**العمليات الحسابية + حل المعادلات** في مكان واحد. أدخل الأرقام أو المعادلة وجرب الأزرار أدناه.")
+# -----------------------------
+# العنوان
+# -----------------------------
+st.title("🧮 Math AI – المساعد الرياضي الذكي")
+st.markdown("أدخل الأرقام أو المعادلة واختر العملية لنقوم بالحساب أو الحل.")
 
 # -----------------------------
-# إعداد session_state
+# session_state
 # -----------------------------
-if 'history' not in st.session_state:
-    st.session_state.history = []
-if 'num1' not in st.session_state:
+if "num1" not in st.session_state:
     st.session_state.num1 = 0
-if 'num2' not in st.session_state:
+if "num2" not in st.session_state:
     st.session_state.num2 = 0
-if 'equation_input' not in st.session_state:
+if "equation_input" not in st.session_state:
     st.session_state.equation_input = ""
+if "history" not in st.session_state:
+    st.session_state.history = []
 
 # -----------------------------
-# دوال الأزرار
+# دوال الأزرار (لا يوجد rerun)
 # -----------------------------
 def reset_inputs():
     st.session_state.num1 = 0
     st.session_state.num2 = 0
     st.session_state.equation_input = ""
-    st.experimental_rerun()
 
 def clear_history():
-    st.session_state.history.clear()
-    st.experimental_rerun()
+    st.session_state.history = []
 
 # -----------------------------
 # العمليات الحسابية
 # -----------------------------
 st.header("العمليات الحسابية")
+
 col1, col2 = st.columns(2)
 st.session_state.num1 = col1.number_input("الرقم الأول:", value=st.session_state.num1, key="num1_input")
 st.session_state.num2 = col2.number_input("الرقم الثاني:", value=st.session_state.num2, key="num2_input")
 
 col_op1, col_op2, col_op3, col_op4 = st.columns(4)
 op_selected = None
+
 if col_op1.button("جمع"):
     op_selected = "جمع"
 if col_op2.button("طرح"):
@@ -89,8 +93,7 @@ if col_op4.button("قسمة"):
 if op_selected:
     num1 = st.session_state.num1
     num2 = st.session_state.num2
-    result = None
-    symbol = ""
+
     if op_selected == "جمع":
         result = num1 + num2
         symbol = "+"
@@ -101,11 +104,13 @@ if op_selected:
         result = num1 * num2
         symbol = "×"
     elif op_selected == "قسمة":
-        if num2 != 0:
+        if num2 == 0:
+            st.error("❌ لا يمكن القسمة على صفر")
+            result = None
+        else:
             result = num1 / num2
             symbol = "÷"
-        else:
-            st.error("❌ لا يمكن القسمة على صفر")
+
     if result is not None:
         st.success(f"✅ {num1} {symbol} {num2} = {result}")
         st.session_state.history.append(f"{num1} {symbol} {num2} = {result}")
@@ -113,41 +118,44 @@ if op_selected:
 # -----------------------------
 # حل المعادلات
 # -----------------------------
-st.header("حل المعادلات البسيطة")
-x = symbols('x')
+st.header("حل المعادلات")
+
 user_input = st.text_input(
-    "اكتب المعادلة (مثال: 2*x + 5 = 15)",
+    "اكتب معادلة (مثال: 2*x + 5 = 15)",
     value=st.session_state.equation_input,
     key="equation_input"
 )
 
+x = symbols("x")
+
 if user_input:
     try:
-        if '=' in user_input:
-            lhs, rhs = user_input.split('=', maxsplit=1)
-            equation = Eq(sympify(lhs.strip()), sympify(rhs.strip()))
-            solution = solve(equation, x)
-            st.success(f"✅ حل المعادلة: {solution}")
-            st.session_state.history.append(f"{user_input} => {solution}")
+        if "=" in user_input:
+            left, right = user_input.split("=", maxsplit=1)
+            eq = Eq(sympify(left.strip()), sympify(right.strip()))
+            sol = solve(eq, x)
+            st.success(f"✅ حل المعادلة: {sol}")
+            st.session_state.history.append(f"{user_input} = {sol}")
         else:
             result = sympify(user_input).evalf()
-            st.success(f"✅ الناتج: {result}")
+            st.success(f"نتيجة التعبير: {result}")
             st.session_state.history.append(f"{user_input} = {result}")
     except Exception as e:
-        st.error(f"❌ خطأ في المسألة: {e}")
+        st.error(f"❌ خطأ في المعادلة: {e}")
 
 # -----------------------------
 # سجل العمليات السابقة
 # -----------------------------
 if st.session_state.history:
-    st.subheader("📜 سجل العمليات السابقة")
-    for idx, item in enumerate(reversed(st.session_state.history), 1):
-        st.write(f"{idx}. {item}")
+    st.subheader("📜 السجل")
+    for i, item in enumerate(reversed(st.session_state.history), 1):
+        st.write(f"{i}. {item}")
 
 # -----------------------------
-# أزرار التحكم مع دوال مستقلة
+# أزرار التحكم
 # -----------------------------
 st.subheader("أزرار التحكم")
+
 col_reset, col_clear = st.columns(2)
-col_reset.button("🔄 إعادة تعيين الإدخالات", on_click=reset_inputs)
-col_clear.button("🗑️ مسح سجل النتائج", on_click=clear_history)
+col_reset.button("🔄 إعادة التعيين", on_click=reset_inputs)
+col_clear.button("🗑️ مسح السجل", on_click=clear_history)
