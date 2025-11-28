@@ -10,7 +10,7 @@ st.set_page_config(page_title="Math AI ", layout="centered")
 # -----------------------------
 # CSS للخلفية والنصوص
 # -----------------------------
-st.markdown("""
+st.markdown("hg")
 <style>
 .stApp { 
     background-image: url("https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=1470&q=80");
@@ -164,6 +164,7 @@ if st.session_state.history:
 col_reset, col_clear = st.columns(2)
 col_reset.button("🔄 إعادة التعيين", on_click=lambda: None)
 col_clear.button("🗑️ مسح السجل", on_click=lambda: st.session_state.history.clear())
+
 
 
 
