@@ -46,10 +46,6 @@ css = """
     font-weight: bold;
     text-shadow: 2px 2px 3px black;
 }
-.stAlert {
-    font-size: 1.8em !important;
-    font-weight: bold !important;
-}
 .success-box {
     background-color: rgba(0, 200, 0, 0.3);
     padding: 10px;
@@ -59,13 +55,6 @@ css = """
 }
 .error-box {
     background-color: rgba(200, 0, 0, 0.3);
-    padding: 10px;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-.warning-box {
-    background-color: rgba(255, 200, 0, 0.3);
     padding: 10px;
     border-radius: 10px;
     font-weight: bold;
@@ -137,4 +126,26 @@ if op_selected:
     if op_selected == "جمع":
         result = num1 + num2
         symbol = "+"
-    elif op_selected ==_
+    elif op_selected == "طرح":
+        result = num1 - num2
+        symbol = "-"
+    elif op_selected == "ضرب":
+        result = num1 * num2
+        symbol = "×"
+    elif op_selected == "قسمة":
+        if num2 == 0:
+            st.markdown('<div class="error-box">❌ لا يمكن القسمة على صفر</div>', unsafe_allow_html=True)
+            result = None
+        else:
+            result = num1 / num2
+            symbol = "÷"
+
+    if result is not None:
+        st.markdown(f'<div class="success-box">✅ {num1} {symbol} {num2} = {result}</div>', unsafe_allow_html=True)
+        st.session_state.history.append(f"{num1} {symbol} {num2} = {result}")
+
+# -----------------------------
+# حل أي معادلة
+# -----------------------------
+st.header("حل المعادلات")
+user_inpu_
