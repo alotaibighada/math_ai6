@@ -1,6 +1,6 @@
 import streamlit as st
-from sympy import symbols, Eq, solve, sympify
-import re  # لاستخدام التعابير النمطية
+from sympy import symbols, Eq, solve, simplify, sympify
+import re
 
 # -----------------------------
 # إعداد الصفحة
@@ -32,6 +32,7 @@ st.markdown("""
 }
 .success-box {background-color: rgba(0,200,0,0.3); padding:10px; border-radius:10px; font-size:1.4em; font-weight:bold;}
 .error-box {background-color: rgba(200,0,0,0.3); padding:10px; border-radius:10px; font-size:1.4em; font-weight:bold;}
+.step-box {background-color: rgba(0,0,200,0.2); padding:10px; border-radius:10px; font-size:1.2em; margin-bottom:5px;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -77,47 +78,54 @@ if op_selected:
         st.markdown(f'<div class="error-box">❌ خطأ: {e}</div>', unsafe_allow_html=True)
 
 # -----------------------------
-# حل المعادلات مع تصحيح 2x -> 2*x
+# حل المعادلات مع خطوات
 # -----------------------------
-st.header("حل المعادلات")
+st.header("حل المعادلات خطوة بخطوة")
 user_input = st.text_input("اكتب معادلة (مثال: 2*x+5=15 أو 2x*8)")
 
 def fix_implied_multiplication(expr):
-    """
-    يحول أي 2x أو 3y إلى 2*x و 3*y قبل تمريرها لـ sympify
-    """
-    # إضافة * بين رقم ومتغير (مثل 2x -> 2*x)
-    expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)
-    # إضافة * بين متغير ومتغير (مثل xy -> x*y)
-    expr = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', expr)
+    expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)  # 2x -> 2*x
+    expr = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', expr)  # xy -> x*y
     return expr
+
+def solve_with_steps(eq_text):
+    steps = []
+    fixed_input = fix_implied_multiplication(eq_text)
+    if "=" in fixed_input:
+        left, right = fixed_input.split("=", maxsplit=1)
+        left_expr = sympify(left.strip())
+        right_expr = sympify(right.strip())
+        
+        vars_in_eq = list(left_expr.free_symbols.union(right_expr.free_symbols))
+        if vars_in_eq:
+            eq = Eq(left_expr, right_expr)
+            steps.append(f"المعادلة الأصلية: {eq_text}")
+            # تبسيط الجانب الأيسر والأيمن
+            left_s = simplify(left_expr)
+            right_s = simplify(right_expr)
+            steps.append(f"بعد التبسيط: {left_s} = {right_s}")
+            # الحل
+            sol = solve(eq, vars_in_eq)
+            steps.append(f"الحل: {sol}")
+            return steps
+        else:
+            if left_expr == right_expr:
+                steps.append("المعادلة صحيحة ✅")
+            else:
+                steps.append("المعادلة خاطئة ❌")
+            return steps
+    else:
+        # تعبير رياضي فقط
+        result = sympify(fixed_input).evalf()
+        steps.append(f"نتيجة التعبير: {result}")
+        return steps
 
 if user_input:
     try:
-        fixed_input = fix_implied_multiplication(user_input)
-        if "=" in fixed_input:
-            left, right = fixed_input.split("=", maxsplit=1)
-            left_expr = sympify(left.strip())
-            right_expr = sympify(right.strip())
-            
-            vars_in_eq = list(left_expr.free_symbols.union(right_expr.free_symbols))
-            if vars_in_eq:
-                eq = Eq(left_expr, right_expr)
-                sol = solve(eq, vars_in_eq)
-                st.markdown(f'<div class="success-box">✅ حل المعادلة: {sol}</div>', unsafe_allow_html=True)
-                st.session_state.history.append(f"{user_input} = {sol}")
-            else:
-                if left_expr == right_expr:
-                    st.markdown('<div class="success-box">✅ المعادلة صحيحة</div>', unsafe_allow_html=True)
-                    st.session_state.history.append(f"{user_input} = صحيحة")
-                else:
-                    st.markdown('<div class="error-box">❌ المعادلة خاطئة</div>', unsafe_allow_html=True)
-                    st.session_state.history.append(f"{user_input} = خاطئة")
-        else:
-            # تعبير رياضي فقط بدون =
-            result = sympify(fixed_input).evalf()
-            st.markdown(f'<div class="success-box">✅ نتيجة التعبير: {result}</div>', unsafe_allow_html=True)
-            st.session_state.history.append(f"{user_input} = {result}")
+        steps = solve_with_steps(user_input)
+        for s in steps:
+            st.markdown(f'<div class="step-box">{s}</div>', unsafe_allow_html=True)
+        st.session_state.history.append(f"{user_input} = {steps[-1]}")
     except Exception as e:
         st.markdown(f'<div class="error-box">❌ خطأ في المعادلة: {e}</div>', unsafe_allow_html=True)
 
