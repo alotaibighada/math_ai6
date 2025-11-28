@@ -8,15 +8,16 @@ import base64
 st.set_page_config(page_title="Math AI – المساعد الرياضي", layout="centered")
 
 # -----------------------------
-# تحويل الصورة إلى Base64
+# دالة لتحويل الصورة إلى Base64
 # -----------------------------
 def get_base64_of_image(image_path):
     with open(image_path, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+        return base64.b64encode(f.read()).decode()
 
-# استبدل هذا بالمسار المحلي للصورة التي أرسلتها
-image_base64 = get_base64_of_image("/mnt/data/981b2b7c-e131-45d6-b564-13dd47cd7442.png")
+# -----------------------------
+# تحويل الصورة التي أرسلتها
+# -----------------------------
+image_base64 = get_base64_of_image("981b2b7c-e131-45d6-b564-13dd47cd7442.png")
 
 # -----------------------------
 # الخلفية والتصميم
@@ -85,7 +86,6 @@ def clear_history():
 # العمليات الحسابية
 # -----------------------------
 st.header("العمليات الحسابية")
-
 col1, col2 = st.columns(2)
 st.session_state.num1 = col1.number_input("الرقم الأول:", value=st.session_state.num1, key="num1_input")
 st.session_state.num2 = col2.number_input("الرقم الثاني:", value=st.session_state.num2, key="num2_input")
@@ -131,7 +131,6 @@ if op_selected:
 # حل المعادلات
 # -----------------------------
 st.header("حل المعادلات")
-
 user_input = st.text_input(
     "اكتب معادلة (مثال: 2*x + 5 = 15)",
     value=st.session_state.equation_input,
@@ -167,7 +166,6 @@ if st.session_state.history:
 # أزرار التحكم
 # -----------------------------
 st.subheader("أزرار التحكم")
-
 col_reset, col_clear = st.columns(2)
 col_reset.button("🔄 إعادة التعيين", on_click=reset_inputs)
 col_clear.button("🗑️ مسح السجل", on_click=clear_history)
