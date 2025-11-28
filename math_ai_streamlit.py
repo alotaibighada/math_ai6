@@ -5,12 +5,12 @@ import re
 # -----------------------------
 # إعداد الصفحة
 # -----------------------------
-st.set_page_config(page_title="Math AI ", layout="centered")
+st.set_page_config(page_title="Math AI تعليمي", layout="centered")
 
 # -----------------------------
 # CSS للخلفية والنصوص
 # -----------------------------
-st.markdown("hg")
+st.markdown("""
 <style>
 .stApp { 
     background-image: url("https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=1470&q=80");
@@ -20,7 +20,7 @@ st.markdown("hg")
 .stNumberInput>div>div>input,
 .stTextInput>div>div>input {
     background: rgba(255,255,255,0.95) !important;
-    font-size: 1.5 em;
+    font-size: 1.5em;
     font-weight: bold;
     text-align: center;
 }
@@ -37,8 +37,8 @@ st.markdown("hg")
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🧮 Math AI – المساعد الذكي")
-st.markdown("أدخل الأرقام أو المعادلة واختر العملية لنقوم بالحساب أو الحل")
+st.title("🧮 Math AI – المساعد التعليمي")
+
 # -----------------------------
 # سجل العمليات
 # -----------------------------
@@ -50,8 +50,8 @@ if "history" not in st.session_state:
 # -----------------------------
 st.header("العمليات الحسابية")
 col1, col2 = st.columns(2)
-num1 = col1.number_input(" **الرقم الأول** ", value=0)
-num2 = col2.number_input("**الرقم الثاني**", value=0)
+num1 = col1.number_input("🔢 الرقم الأول:", value=0)
+num2 = col2.number_input("🔢 الرقم الثاني:", value=0)
 
 col_op1, col_op2, col_op3, col_op4 = st.columns(4)
 op_selected = None
@@ -82,30 +82,24 @@ if op_selected:
 # دالة تصحيح الضرب الضمني
 # -----------------------------
 def fix_all_implied_multiplication(expr):
-    try:
-        expr = expr.replace(" ", "")  # إزالة المسافات
-        expr = re.sub(r'(\d)([a-zA-Z\(])', r'\1*\2', expr)
-        expr = re.sub(r'([a-zA-Z\)])([a-zA-Z\(])', r'\1*\2', expr)
-        expr = re.sub(r'(\))(\d|\()', r'\1*\2', expr)
-        return expr
-    except:
-        return expr
+    expr = expr.replace(" ", "")
+    expr = re.sub(r'(\d)([a-zA-Z\(])', r'\1*\2', expr)
+    expr = re.sub(r'([a-zA-Z\)])([a-zA-Z\(])', r'\1*\2', expr)
+    expr = re.sub(r'(\))(\d|\()', r'\1*\2', expr)
+    return expr
 
 # -----------------------------
 # حل المعادلات خطوة بخطوة مع شرح
 # -----------------------------
-st.header("حل المعادلات ")
-user_input = st.text_input("اكتب معادلة (2*x+5=15 أو 2 x*8)")
+st.header("حل المعادلات التعليمي")
+user_input = st.text_input("اكتب معادلة (مثال: 2*x+5=15 أو 2x*8)")
 
 x = symbols("x")  # متغير افتراضي
 
 def solve_with_explanation(eq_text):
     steps = []
-    
-    # تحقق من وجود أكثر من = في المعادلة
     if eq_text.count("=") > 1:
         return ["❌ صياغة المعادلة خاطئة: أكثر من علامة مساواة"]
-
     steps.append(f"المعادلة الأصلية: {eq_text}")
     
     fixed_input = fix_all_implied_multiplication(eq_text)
@@ -125,7 +119,6 @@ def solve_with_explanation(eq_text):
                 
                 sol = solve(eq, vars_in_eq)
                 steps.append(f"✅ الحل النهائي: {sol}")
-                
                 steps.append(f"💡 تفسير: تم نقل الحدود لجعل المتغير على جانب واحد، وتبسيط الطرفين للوصول إلى قيمة المتغير.")
             else:
                 if left_expr == right_expr:
@@ -164,8 +157,3 @@ if st.session_state.history:
 col_reset, col_clear = st.columns(2)
 col_reset.button("🔄 إعادة التعيين", on_click=lambda: None)
 col_clear.button("🗑️ مسح السجل", on_click=lambda: st.session_state.history.clear())
-
-
-
-
-
