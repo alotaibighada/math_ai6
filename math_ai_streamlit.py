@@ -61,30 +61,4 @@ st.markdown("""
 # العنوان
 # -----------------------------
 st.title("🧮 Math AI – المساعد الرياضي الذكي")
-st.markdown("أدخل الأرقام أو المعادلة واختر العملية لنقوم بالحساب أو الحل.")
-
-# -----------------------------
-# session_state
-# -----------------------------
-for key, default in [("num1", 0), ("num2", 0), ("equation_input", ""), ("history", [])]:
-    if key not in st.session_state:
-        st.session_state[key] = default
-
-# -----------------------------
-# دوال الأزرار
-# -----------------------------
-def reset_inputs():
-    st.session_state.num1 = 0
-    st.session_state.num2 = 0
-    st.session_state.equation_input = ""
-
-def clear_history():
-    st.session_state.history = []
-
-# -----------------------------
-# العمليات الحسابية
-# -----------------------------
-st.header("العمليات الحسابية")
-col1, col2 = st.columns(2)
-st.session_state.num1 = col1.number_input("الرقم الأول:", value=st.session_state.num1, key="num1_input")
-st.session_state.num2 = col2.number_input("الرقم الثاني:", value=st.session_state.num2, key="num2_input")
+st.markdown("أدخل الأرقام أو المعادل
