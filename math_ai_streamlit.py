@@ -58,7 +58,7 @@ st.markdown(
 
 /* نتائج العمليات بشكل واضح */
 .stAlert {
-    font-size: 1.8em !important;
+    font-size: 2.8em !important;
     font-weight: bold !important;
 }
 </style>
@@ -70,7 +70,7 @@ unsafe_allow_html=True
 # العنوان
 # -----------------------------
 st.title("🧮 Math AI – المساعد الرياضي الذكي")
-st.markdown("أدخل الأرقام أو المعادلة واختر العملية لنقوم بالحساب أو الحل.")
+st.markdown("أدخل الأرقام أو المعادلة واختر العملية لنقوم بالحساب أو الحل")
 
 # -----------------------------
 # session_state
@@ -100,8 +100,8 @@ def clear_history():
 # -----------------------------
 st.header("العمليات الحسابية")
 col1, col2 = st.columns(2)
-st.session_state.num1 = col1.number_input("الرقم الأول:", value=st.session_state.num1, key="num1_input")
-st.session_state.num2 = col2.number_input("الرقم الثاني:", value=st.session_state.num2, key="num2_input")
+st.session_state.num1 = col1.number_input(" :الرقم الأول", value=st.session_state.num1, key="num1_input")
+st.session_state.num2 = col2.number_input(" :الرقم الثاني", value=st.session_state.num2, key="num2_input")
 
 col_op1, col_op2, col_op3, col_op4 = st.columns(4)
 op_selected = None
@@ -182,3 +182,4 @@ st.subheader("أزرار التحكم")
 col_reset, col_clear = st.columns(2)
 col_reset.button("🔄 إعادة التعيين", on_click=reset_inputs)
 col_clear.button("🗑️ مسح السجل", on_click=clear_history)
+
