@@ -1,5 +1,6 @@
 import streamlit as st
 from sympy import symbols, Eq, solve, sympify
+import base64
 
 # -----------------------------
 # إعداد الصفحة
@@ -7,16 +8,27 @@ from sympy import symbols, Eq, solve, sympify
 st.set_page_config(page_title="Math AI – المساعد الرياضي", layout="centered")
 
 # -----------------------------
+# تحويل الصورة إلى Base64
+# -----------------------------
+def get_base64_of_image(image_path):
+    with open(image_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+# استبدل هذا بالمسار المحلي للصورة التي أرسلتها
+image_base64 = get_base64_of_image("/mnt/data/981b2b7c-e131-45d6-b564-13dd47cd7442.png")
+
+# -----------------------------
 # الخلفية والتصميم
 # -----------------------------
-st.markdown("""
+st.markdown(f"""
 <style>
-.stApp {
-    background-image: url("https://images.unsplash.com/photo-1610878180933-bec6d217f8f4?auto=format&fit=crop&w=1050&q=80");
+.stApp {{
+    background-image: url("data:image/png;base64,{image_base64}");
     background-size: cover;
     background-attachment: fixed;
-}
-.stNumberInput>div>div>input, .stTextInput>div>div>input {
+}}
+.stNumberInput>div>div>input, .stTextInput>div>div>input {{
     background: rgba(255,255,255,0.85);
     color: black;
     font-size: 1.3em;
@@ -24,19 +36,19 @@ st.markdown("""
     border-radius: 6px;
     border: 1px solid #aaa;
     text-align: center;
-}
-.stButton>button {
+}}
+.stButton>button {{
     height: 3em;
     width: 100%;
     border-radius: 10px;
     border: none;
     font-weight: bold;
     font-size: 1.1em;
-}
-.stMarkdown, .stHeader, .stSubheader {
+}}
+.stMarkdown, .stHeader, .stSubheader {{
     color: white;
     text-shadow: 1px 1px 2px black;
-}
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -59,7 +71,7 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 # -----------------------------
-# دوال الأزرار (لا يوجد rerun)
+# دوال الأزرار
 # -----------------------------
 def reset_inputs():
     st.session_state.num1 = 0
