@@ -18,16 +18,20 @@ st.markdown(f'''
     background-size: cover;
     background-attachment: fixed;
 }}
+
 /* تحسين وضوح الحقول */
-.stNumberInput>div>div>input, .stTextInput>div>div>input {{
-    background: rgba(255,255,255,0.9);
-    color: black;
+.stNumberInput>div>div>input, 
+.stTextInput>div>div>input {{
+    background: rgba(255,255,255,0.95) !important;
+    color: black !important;
     font-size: 1.3em;
     padding: 0.5em;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid #555;
     text-align: center;
 }}
+
+/* أزرار واضحة */
 .stButton>button {{
     height: 3em;
     width: 100%;
@@ -35,38 +39,9 @@ st.markdown(f'''
     border: none;
     font-weight: bold;
     font-size: 1.1em;
-    background-color: rgba(0, 123, 255, 0.8);
-    color: white;
+    background-color: rgba(0, 123, 255, 0.9) !important;
+    color: white !important;
 }}
-.stMarkdown, .stHeader, .stSubheader {{
-    color: white;
-    text-shadow: 2px 2px 4px black;
-}}
-</style>
-''', unsafe_allow_html=True)
 
-# -----------------------------
-# العنوان
-# -----------------------------
-st.title("🧮 Math AI – المساعد الرياضي الذكي")
-st.markdown("أدخل الأرقام أو المعادلة واختر العملية لنقوم بالحساب أو الحل.")
-
-# -----------------------------
-# session_state
-# -----------------------------
-if "num1" not in st.session_state:
-    st.session_state.num1 = 0
-if "num2" not in st.session_state:
-    st.session_state.num2 = 0
-if "equation_input" not in st.session_state:
-    st.session_state.equation_input = ""
-if "history" not in st.session_state:
-    st.session_state.history = []
-
-# -----------------------------
-# دوال التحكم
-# -----------------------------
-def reset_inputs():
-    st.session_state.num1 = 0
-    st.session_state.num2 = 0
-    st
+/* النصوص والعناوين */
+.st
