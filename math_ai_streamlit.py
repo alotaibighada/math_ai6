@@ -94,43 +94,4 @@ if op_selected:
 # حل المعادلات
 # -----------------------------
 st.header("حل المعادلات البسيطة")
-user_input = st.text_input("اكتب المعادلة (مثال: 2*x + 5 = 15)", value=st.session_state.equation_input, key="equation_input")
-
-x = symbols('x')
-if user_input:
-    try:
-        if '=' in user_input:
-            lhs, rhs = user_input.split('=', maxsplit=1)
-            equation = Eq(sympify(lhs.strip()), sympify(rhs.strip()))
-            solution = solve(equation, x)
-            st.success(f"✅ حل المعادلة: {solution}")
-            st.session_state.history.append(f"{user_input} => {solution}")
-        else:
-            result = sympify(user_input).evalf()
-            st.success(f"✅ الناتج: {result}")
-            st.session_state.history.append(f"{user_input} = {result}")
-    except Exception as e:
-        st.error(f"❌ خطأ في المسألة: {e}")
-
-# -----------------------------
-# سجل العمليات السابقة
-# -----------------------------
-if st.session_state.history:
-    st.subheader("📜 سجل العمليات السابقة")
-    for idx, item in enumerate(reversed(st.session_state.history), 1):
-        st.write(f"{idx}. {item}")
-
-# -----------------------------
-# أزرار التحكم
-# -----------------------------
-col_reset, col_clear = st.columns(2)
-
-# إعادة تعيين الأرقام والمعادلة
-if col_reset.button("🔄 إعادة تعيين الإدخالات"):
-    st.session_state.num1 = 0
-    st.session_state.num2 = 0
-    st.session_state["equation_input"] = ""
-
-# مسح سجل العمليات
-if col_clear.button("🗑️ مسح سجل النتائج"):
-    st.session_state.history = []
+user_input = st.text_input("اكتب المعادلة (مثال: 2*x + 5 = 15)", value=st.session_state.equa_*
