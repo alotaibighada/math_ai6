@@ -1,5 +1,6 @@
 import streamlit as st
 from sympy import symbols, Eq, solve, sympify
+import re  # لاستخدام التعابير النمطية
 
 # -----------------------------
 # إعداد الصفحة
@@ -43,7 +44,7 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 # -----------------------------
-# العمليات الحسابية بدون eval
+# العمليات الحسابية
 # -----------------------------
 st.header("العمليات الحسابية")
 col1, col2 = st.columns(2)
@@ -76,15 +77,26 @@ if op_selected:
         st.markdown(f'<div class="error-box">❌ خطأ: {e}</div>', unsafe_allow_html=True)
 
 # -----------------------------
-# حل المعادلات
+# حل المعادلات مع تصحيح 2x -> 2*x
 # -----------------------------
 st.header("حل المعادلات")
-user_input = st.text_input("اكتب معادلة (مثال: 2*x+5=15 أو 2*5=10)")
+user_input = st.text_input("اكتب معادلة (مثال: 2*x+5=15 أو 2x*8)")
+
+def fix_implied_multiplication(expr):
+    """
+    يحول أي 2x أو 3y إلى 2*x و 3*y قبل تمريرها لـ sympify
+    """
+    # إضافة * بين رقم ومتغير (مثل 2x -> 2*x)
+    expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)
+    # إضافة * بين متغير ومتغير (مثل xy -> x*y)
+    expr = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', expr)
+    return expr
 
 if user_input:
     try:
-        if "=" in user_input:
-            left, right = user_input.split("=", maxsplit=1)
+        fixed_input = fix_implied_multiplication(user_input)
+        if "=" in fixed_input:
+            left, right = fixed_input.split("=", maxsplit=1)
             left_expr = sympify(left.strip())
             right_expr = sympify(right.strip())
             
@@ -103,7 +115,7 @@ if user_input:
                     st.session_state.history.append(f"{user_input} = خاطئة")
         else:
             # تعبير رياضي فقط بدون =
-            result = sympify(user_input).evalf()
+            result = sympify(fixed_input).evalf()
             st.markdown(f'<div class="success-box">✅ نتيجة التعبير: {result}</div>', unsafe_allow_html=True)
             st.session_state.history.append(f"{user_input} = {result}")
     except Exception as e:
