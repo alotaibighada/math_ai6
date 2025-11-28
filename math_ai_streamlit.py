@@ -6,14 +6,16 @@ from sympy import symbols, Eq, solve, sympify
 # -----------------------------
 st.set_page_config(page_title="Math AI – المساعد الرياضي", layout="centered")
 
-# صورة AI بسيطة في الأعلى
-st.image("https://cdn-icons-png.flaticon.com/512/4420/4420441.png", width=150)
-
-# CSS لتجميل الواجهة
+# CSS لتجميل الواجهة ووضع صورة كخلفية
 st.markdown("""
 <style>
+.stApp {
+    background-image: url("https://images.unsplash.com/photo-1610878180933-bec6d217f8f4?auto=format&fit=crop&w=1050&q=80");
+    background-size: cover;
+    background-attachment: fixed;
+}
 .stNumberInput>div>div>input, .stTextInput>div>div>input {
-    background: rgba(240,240,240,1);
+    background: rgba(255,255,255,0.85);
     color: black;
     font-size: 1.4em;
     padding: 0.6em;
@@ -29,6 +31,10 @@ st.markdown("""
     font-weight: bold;
     font-size: 1.2em;
     cursor: pointer;
+}
+.stMarkdown, .stHeader, .stSubheader {
+    color: white;
+    text-shadow: 1px 1px 2px black;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -144,5 +150,5 @@ if col_reset.button("🔄 إعادة تعيين الإدخالات"):
 
 # مسح سجل العمليات
 if col_clear.button("🗑️ مسح سجل النتائج"):
-    st.session_state.history = []
+    st.session_state.history.clear()
     st.experimental_rerun()
