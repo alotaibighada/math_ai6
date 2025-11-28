@@ -149,10 +149,12 @@ if op_selected:
 # -----------------------------
 st.header("حل المعادلات")
 user_input = st.text_input(
-    "اكتب معادلة (مثال: 2*x + 5 = 15)",
+    "اكتب معادلة (مثال: 2*x + 5 = 15 أو 2*5=10)",
     value=st.session_state.equation_input,
     key="equation_input"
 )
+
+x = symbols("x")  # متغير افتراضي إذا احتاجته المعادلة
 
 if user_input:
     try:
@@ -160,13 +162,24 @@ if user_input:
             left, right = user_input.split("=", maxsplit=1)
             left_expr = sympify(left.strip())
             right_expr = sympify(right.strip())
-            eq = Eq(left_expr, right_expr)
-            
-            vars_in_eq = list(eq.free_symbols)
-            sol = solve(eq, vars_in_eq)
-            st.markdown(f'<div class="success-box">✅ حل المعادلة: {sol}</div>', unsafe_allow_html=True)
-            st.session_state.history.append(f"{user_input} = {sol}")
+
+            # إذا المعادلة تحتوي على متغير
+            vars_in_eq = list(left_expr.free_symbols.union(right_expr.free_symbols))
+            if vars_in_eq:
+                eq = Eq(left_expr, right_expr)
+                sol = solve(eq, vars_in_eq)
+                st.markdown(f'<div class="success-box">✅ حل المعادلة: {sol}</div>', unsafe_allow_html=True)
+                st.session_state.history.append(f"{user_input} = {sol}")
+            else:
+                # معادلة بدون متغير => تحقق من صحتها
+                if left_expr == right_expr:
+                    st.markdown('<div class="success-box">✅ المعادلة صحيحة</div>', unsafe_allow_html=True)
+                    st.session_state.history.append(f"{user_input} = صحيح")
+                else:
+                    st.markdown('<div class="error-box">❌ المعادلة خاطئة</div>', unsafe_allow_html=True)
+                    st.session_state.history.append(f"{user_input} = خاطئ")
         else:
+            # تعبير حسابي فقط
             result = sympify(user_input).evalf()
             st.markdown(f'<div class="success-box">✅ نتيجة التعبير: {result}</div>', unsafe_allow_html=True)
             st.session_state.history.append(f"{user_input} = {result}")
