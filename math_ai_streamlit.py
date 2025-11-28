@@ -91,11 +91,11 @@ st.header("العمليات الحسابية")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("**🔢 الرقم الأول:**", unsafe_allow_html=True)
+    st.markdown("** الرقم الأول**", unsafe_allow_html=True)
     st.session_state.num1 = st.number_input("", value=st.session_state.num1, key="num1_input")
 
 with col2:
-    st.markdown("**🔢 الرقم الثاني:**", unsafe_allow_html=True)
+    st.markdown("** الرقم الثاني**", unsafe_allow_html=True)
     st.session_state.num2 = st.number_input("", value=st.session_state.num2, key="num2_input")
 
 col_op1, col_op2, col_op3, col_op4 = st.columns(4)
@@ -177,3 +177,4 @@ st.subheader("أزرار التحكم")
 col_reset, col_clear = st.columns(2)
 col_reset.button("🔄 إعادة التعيين", on_click=reset_inputs)
 col_clear.button("🗑️ مسح السجل", on_click=clear_history)
+
