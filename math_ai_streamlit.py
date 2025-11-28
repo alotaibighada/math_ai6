@@ -1,5 +1,6 @@
 import streamlit as st
 from sympy import symbols, Eq, solve, sympify
+import base64
 
 # -----------------------------
 # إعداد الصفحة
@@ -7,12 +8,19 @@ from sympy import symbols, Eq, solve, sympify
 st.set_page_config(page_title="Math AI – المساعد الرياضي", layout="centered")
 
 # -----------------------------
-# الخلفية والتصميم بصيغة Base64
+# تحويل الصورة إلى Base64
 # -----------------------------
-image_base64 = """
-iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAACR/ePOAAAgAElEQVR4nOy9e5AUVdX3/...
-"""  # ضع هنا كامل محتوى Base64 للصورة التي أرسلتها
+def get_base64_of_image(image_file):
+    with open(image_file, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
+# ضع هنا مسار الصورة التي أرسلتها
+image_base64 = get_base64_of_image("/mnt/data/981b2b7c-e131-45d6-b564-13dd47cd7442.png")
+
+# -----------------------------
+# الخلفية والتصميم
+# -----------------------------
 st.markdown(f"""
 <style>
 .stApp {{
