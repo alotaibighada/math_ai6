@@ -50,6 +50,27 @@ css = """
     font-size: 1.8em !important;
     font-weight: bold !important;
 }
+.success-box {
+    background-color: rgba(0, 200, 0, 0.3);
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+.error-box {
+    background-color: rgba(200, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+.warning-box {
+    background-color: rgba(255, 200, 0, 0.3);
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.5em;
+}
 </style>
 """
 st.markdown(css, unsafe_allow_html=True)
@@ -78,4 +99,42 @@ if "history" not in st.session_state:
 def reset_inputs():
     st.session_state.num1 = 0
     st.session_state.num2 = 0
-    st.session_state.equation_
+    st.session_state.equation_input = ""
+
+def clear_history():
+    st.session_state.history = []
+
+# -----------------------------
+# العمليات الحسابية
+# -----------------------------
+st.header("العمليات الحسابية")
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("**🔢 الرقم الأول:**", unsafe_allow_html=True)
+    st.session_state.num1 = st.number_input("", value=st.session_state.num1, key="num1_input")
+
+with col2:
+    st.markdown("**🔢 الرقم الثاني:**", unsafe_allow_html=True)
+    st.session_state.num2 = st.number_input("", value=st.session_state.num2, key="num2_input")
+
+col_op1, col_op2, col_op3, col_op4 = st.columns(4)
+op_selected = None
+
+if col_op1.button("جمع"):
+    op_selected = "جمع"
+if col_op2.button("طرح"):
+    op_selected = "طرح"
+if col_op3.button("ضرب"):
+    op_selected = "ضرب"
+if col_op4.button("قسمة"):
+    op_selected = "قسمة"
+
+if op_selected:
+    num1 = st.session_state.num1
+    num2 = st.session_state.num2
+
+    if op_selected == "جمع":
+        result = num1 + num2
+        symbol = "+"
+    elif op_selected ==_
