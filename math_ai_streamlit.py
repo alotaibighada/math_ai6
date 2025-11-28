@@ -106,7 +106,7 @@ if op_selected:
 # -----------------------------
 st.header("حل المعادلات البسيطة")
 user_input = st.text_input(
-    "اكتب المعادلة ( 2*x + 5 = 15 :مثال )",
+    "اكتب المعادلة (مثال: 2*x + 5 = 15)",
     value=st.session_state.equation_input,
     key="equation_input"
 )
@@ -146,7 +146,9 @@ if col_reset.button("🔄 إعادة تعيين الإدخالات"):
     st.session_state.num1 = 0
     st.session_state.num2 = 0
     st.session_state.equation_input = ""
+    st.experimental_rerun()  # إعادة تحميل الصفحة لتطبيق القيم الجديدة
 
 # مسح سجل العمليات
 if col_clear.button("🗑️ مسح سجل النتائج"):
     st.session_state.history.clear()
+    st.experimental_rerun()  # إعادة تحميل الصفحة لتحديث السجل
