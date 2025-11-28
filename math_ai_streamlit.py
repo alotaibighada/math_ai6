@@ -119,4 +119,58 @@ if op_selected:
     elif op_selected == "ضرب":
         result = num1 * num2
         symbol = "×"
-    elif op_selecte_
+    elif op_selected == "قسمة":
+        if num2 == 0:
+            st.error("❌ لا يمكن القسمة على صفر")
+            result = None
+        else:
+            result = num1 / num2
+            symbol = "÷"
+
+    if result is not None:
+        st.success(f"✅ {num1} {symbol} {num2} = {result}")
+        st.session_state.history.append(f"{num1} {symbol} {num2} = {result}")
+
+# -----------------------------
+# حل المعادلات
+# -----------------------------
+st.header("حل المعادلات")
+user_input = st.text_input(
+    "اكتب معادلة (مثال: 2*x + 5 = 15)",
+    value=st.session_state.equation_input,
+    key="equation_input"
+)
+
+x = symbols("x")
+
+if user_input:
+    try:
+        if "=" in user_input:
+            left, right = user_input.split("=", maxsplit=1)
+            eq = Eq(sympify(left.strip()), sympify(right.strip()))
+            sol = solve(eq, x)
+            st.success(f"✅ حل المعادلة: {sol}")
+            st.session_state.history.append(f"{user_input} = {sol}")
+        else:
+            result = sympify(user_input).evalf()
+            st.success(f"نتيجة التعبير: {result}")
+            st.session_state.history.append(f"{user_input} = {result}")
+    except Exception as e:
+        st.error(f"❌ خطأ في المعادلة: {e}")
+
+# -----------------------------
+# سجل العمليات السابقة
+# -----------------------------
+if st.session_state.history:
+    st.subheader("📜 السجل")
+    for i, item in enumerate(reversed(st.session_state.history), 1):
+        st.write(f"{i}. {item}")
+
+# -----------------------------
+# أزرار التحكم
+# -----------------------------
+st.subheader("أزرار التحكم")
+col_reset, col_clear = st.columns(2)
+col_reset.button("🔄 إعادة التعيين", on_click=reset_inputs)
+col_clear.button("🗑️ مسح السجل", on_click=clear_history)
+
