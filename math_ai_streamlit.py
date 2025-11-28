@@ -1,8 +1,13 @@
 import streamlit as st
 from sympy import symbols, Eq, solve, sympify
 
+# -----------------------------
 # إعداد الصفحة
+# -----------------------------
 st.set_page_config(page_title="Math AI – المساعد الرياضي", layout="centered")
+
+# صورة AI بسيطة في الأعلى
+st.image("https://cdn-icons-png.flaticon.com/512/4420/4420441.png", width=150)
 
 # CSS لتجميل الواجهة
 st.markdown("""
@@ -95,7 +100,7 @@ if op_selected:
 # -----------------------------
 st.header("حل المعادلات البسيطة")
 user_input = st.text_input(
-    "اكتب المعادلة (  2*x + 5 = 15 مثال)",
+    "اكتب المعادلة (مثال: 2*x + 5 = 15)",
     value=st.session_state.equation_input,
     key="equation_input"
 )
@@ -117,3 +122,27 @@ if user_input:
         st.error(f"❌ خطأ في المسألة: {e}")
 
 # -----------------------------
+# سجل العمليات السابقة
+# -----------------------------
+if st.session_state.history:
+    st.subheader("📜 سجل العمليات السابقة")
+    for idx, item in enumerate(reversed(st.session_state.history), 1):
+        st.write(f"{idx}. {item}")
+
+# -----------------------------
+# أزرار التحكم
+# -----------------------------
+st.subheader("أزرار التحكم")
+col_reset, col_clear = st.columns(2)
+
+# إعادة تعيين الأرقام والمعادلة
+if col_reset.button("🔄 إعادة تعيين الإدخالات"):
+    st.session_state.num1 = 0
+    st.session_state.num2 = 0
+    st.session_state.equation_input = ""
+    st.experimental_rerun()
+
+# مسح سجل العمليات
+if col_clear.button("🗑️ مسح سجل النتائج"):
+    st.session_state.history = []
+    st.experimental_rerun()
