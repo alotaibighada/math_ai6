@@ -1,10 +1,13 @@
 import streamlit as st
 from sympy import symbols, Eq, solve, sympify
+import easyocr
+from PIL import Image
+import numpy as np
 
-st.title("🧮 Math AI – النسخة البسيطة")
+st.title("🧮 Math AI – نسخة مبسطة مع OCR")
 
 # -----------------------------
-# العمليات الحسابية
+# العمليات الحسابية البسيطة
 # -----------------------------
 st.header("العمليات الحسابية")
 num1 = st.number_input("الرقم الأول:", value=0)
@@ -45,3 +48,28 @@ if st.button("حل المعادلة"):
         st.success(f"✅ الحل: {solution}")
     except:
         st.error("❌ صياغة المعادلة خاطئة")
+
+# -----------------------------
+# OCR لمسح المعادلات من الصور
+# -----------------------------
+st.header("مسح ضوئي للمعادلات")
+uploaded_file = st.file_uploader("اختر صورة المعادلة:", type=["png","jpg","jpeg"])
+
+if uploaded_file:
+    image = Image.open(uploaded_file)
+    st.image(image, caption="الصورة المرفوعة", use_column_width=True)
+    
+    reader = easyocr.Reader(['ar','en'])
+    result = reader.readtext(np.array(image))
+    extracted_text = " ".join([res[1] for res in result])
+    
+    st.markdown(f"📋 **النص المستخرج:** {extracted_text}")
+    
+    if extracted_text:
+        try:
+            left, right = extracted_text.split("=")
+            eq = Eq(sympify(left), sympify(right))
+            solution = solve(eq, x)
+            st.success(f"✅ الحل: {solution}")
+        except:
+            st.error("❌ لا يمكن حل المعادلة المستخرجة")
